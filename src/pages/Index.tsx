@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Upload, FileAudio, Loader2, CheckCircle } from "lucide-react";
+import { Upload, FileAudio, Loader2, CheckCircle, FileText, RotateCcw, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -13,6 +15,9 @@ const Index = () => {
   const [transcription, setTranscription] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const [outputFormat, setOutputFormat] = useState("text");
+  const [processedContent, setProcessedContent] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState("original");
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -60,6 +65,8 @@ const Index = () => {
 
     setIsTranscribing(true);
     setTranscription("");
+    setProcessedContent("");
+    setActiveTab("original");
     
     try {
       const formData = new FormData();
@@ -123,9 +130,79 @@ const Index = () => {
     }
   };
 
+  const handleContentProcessing = async (type: 'summarise' | 'paraphrase' | 'generate') => {
+    if (!transcription) {
+      toast.error("Please transcribe content first");
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    try {
+      // This would be your actual API call to process the content
+      // For demo purposes, we'll simulate the processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      let processedText = "";
+      const baseText = "This is a demo processed content. Connect your AI API to see real results!";
+      
+      switch (type) {
+        case 'summarise':
+          processedText = `Summary: ${baseText} This content has been summarized to highlight the key points.`;
+          break;
+        case 'paraphrase':
+          processedText = `Paraphrased: ${baseText} The same ideas expressed in different words.`;
+          break;
+        case 'generate':
+          processedText = `New Content: ${baseText} Fresh content inspired by the original transcription.`;
+          break;
+      }
+
+      if (outputFormat === 'json') {
+        setProcessedContent(JSON.stringify({
+          type: type,
+          content: processedText,
+          timestamp: new Date().toISOString(),
+          format: "json"
+        }, null, 2));
+      } else if (outputFormat === 'xml') {
+        setProcessedContent(`<?xml version="1.0" encoding="UTF-8"?>
+<processed>
+  <type>${type}</type>
+  <content>${processedText}</content>
+  <timestamp>${new Date().toISOString()}</timestamp>
+  <format>xml</format>
+</processed>`);
+      } else {
+        setProcessedContent(processedText);
+      }
+
+      setActiveTab("processed");
+      toast.success(`Content ${type}d successfully!`);
+    } catch (error) {
+      console.error('Processing error:', error);
+      toast.error(`Failed to ${type} content. Please try again.`);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const getCurrentContent = () => {
+    return activeTab === "original" ? transcription : processedContent;
+  };
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(transcription);
-    toast.success("Transcription copied to clipboard!");
+    const content = getCurrentContent();
+    navigator.clipboard.writeText(content);
+    toast.success("Content copied to clipboard!");
+  };
+
+  const clearContent = () => {
+    if (activeTab === "original") {
+      setTranscription("");
+    } else {
+      setProcessedContent("");
+    }
   };
 
   return (
@@ -221,16 +298,16 @@ const Index = () => {
                     className="flex gap-6"
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="text" id="text" />
-                      <Label htmlFor="text" className="text-sm text-stone-600">Text</Label>
+                      <RadioGroupItem value="text" id="result-text" />
+                      <Label htmlFor="result-text" className="text-sm text-stone-600">Text</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="json" id="json" />
-                      <Label htmlFor="json" className="text-sm text-stone-600">JSON</Label>
+                      <RadioGroupItem value="json" id="result-json" />
+                      <Label htmlFor="result-json" className="text-sm text-stone-600">JSON</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="xml" id="xml" />
-                      <Label htmlFor="xml" className="text-sm text-stone-600">XML</Label>
+                      <RadioGroupItem value="xml" id="result-xml" />
+                      <Label htmlFor="result-xml" className="text-sm text-stone-600">XML</Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -260,26 +337,129 @@ const Index = () => {
                   <FileAudio className="h-5 w-5" />
                   Transcription Result
                   {outputFormat !== 'text' && (
-                    <span className="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded-md ml-2">
+                    <Badge variant="secondary" className="ml-2">
                       {outputFormat.toUpperCase()}
-                    </span>
+                    </Badge>
                   )}
                 </CardTitle>
                 <CardDescription className="text-stone-600">
-                  Your audio transcription will appear here in {outputFormat} format
+                  Your audio transcription and processed content
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <Textarea
-                    value={transcription}
-                    onChange={(e) => setTranscription(e.target.value)}
-                    placeholder={`Transcription will appear here in ${outputFormat} format after processing...`}
-                    className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400 font-mono text-sm"
-                    readOnly={isTranscribing}
-                  />
-                  
+                  {/* Output Format Selection */}
+                  <div>
+                    <Label className="text-sm font-medium text-stone-700 mb-3 block">
+                      Output Format
+                    </Label>
+                    <RadioGroup 
+                      value={outputFormat} 
+                      onValueChange={setOutputFormat}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="text" id="result-text" />
+                        <Label htmlFor="result-text" className="text-sm text-stone-600">Text</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="json" id="result-json" />
+                        <Label htmlFor="result-json" className="text-sm text-stone-600">JSON</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="xml" id="result-xml" />
+                        <Label htmlFor="result-xml" className="text-sm text-stone-600">XML</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {/* Content Processing Options */}
                   {transcription && (
+                    <div>
+                      <Label className="text-sm font-medium text-stone-700 mb-3 block">
+                        Content Processing
+                      </Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <Button
+                          onClick={() => handleContentProcessing('summarise')}
+                          disabled={isProcessing}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2"
+                        >
+                          <FileText className="h-3 w-3" />
+                          Summarise
+                        </Button>
+                        <Button
+                          onClick={() => handleContentProcessing('paraphrase')}
+                          disabled={isProcessing}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2"
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                          Paraphrase
+                        </Button>
+                        <Button
+                          onClick={() => handleContentProcessing('generate')}
+                          disabled={isProcessing}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2"
+                        >
+                          <Lightbulb className="h-3 w-3" />
+                          Generate New
+                        </Button>
+                      </div>
+                      {isProcessing && (
+                        <div className="flex items-center gap-2 mt-2 text-sm text-stone-600">
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          Processing content...
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Content Tabs */}
+                  {transcription && (
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="original">Original</TabsTrigger>
+                        <TabsTrigger value="processed" disabled={!processedContent}>
+                          Processed
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="original">
+                        <Textarea
+                          value={transcription}
+                          onChange={(e) => setTranscription(e.target.value)}
+                          placeholder={`Original transcription in ${outputFormat} format...`}
+                          className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400 font-mono text-sm"
+                          readOnly={isTranscribing}
+                        />
+                      </TabsContent>
+                      <TabsContent value="processed">
+                        <Textarea
+                          value={processedContent}
+                          onChange={(e) => setProcessedContent(e.target.value)}
+                          placeholder={`Processed content in ${outputFormat} format...`}
+                          className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400 font-mono text-sm"
+                          readOnly={isProcessing}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  )}
+
+                  {!transcription && (
+                    <Textarea
+                      value=""
+                      placeholder={`Transcription will appear here in ${outputFormat} format after processing...`}
+                      className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400 font-mono text-sm"
+                      readOnly
+                    />
+                  )}
+                  
+                  {(transcription || processedContent) && (
                     <div className="flex gap-2">
                       <Button 
                         onClick={copyToClipboard}
@@ -290,7 +470,7 @@ const Index = () => {
                         Copy to Clipboard
                       </Button>
                       <Button 
-                        onClick={() => setTranscription("")}
+                        onClick={clearContent}
                         variant="outline"
                         size="sm"
                         className="flex-1 border-stone-300 text-stone-700 hover:bg-stone-50"
