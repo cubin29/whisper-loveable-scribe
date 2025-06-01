@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Upload, FileAudio, Loader2, CheckCircle, FileText, RotateCcw, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import { toast } from "sonner";
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isTranscribing, setIsTranscribing] = useState(false);
-  const [transcription, setTranscription] = useState("");
+  const [transcription, setTranscription] = useState("Welcome to our quarterly business review meeting. Today we'll be discussing the company's performance over the past three months, including revenue growth, market expansion strategies, and upcoming product launches. Our sales team has exceeded targets by 15%, particularly in the European market where we've seen a 23% increase in customer acquisition. The marketing department has successfully launched three major campaigns, resulting in improved brand recognition and customer engagement. Moving forward, we plan to invest heavily in research and development, with a focus on artificial intelligence and machine learning technologies. We anticipate launching two new products in the next quarter, pending final quality assurance testing. The financial outlook remains positive, with projected growth of 18% for the upcoming fiscal year.");
   const [dragActive, setDragActive] = useState(false);
   const [outputFormat, setOutputFormat] = useState("text");
   const [processedContent, setProcessedContent] = useState("");
