@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, FileAudio, Loader2, CheckCircle, FileText, RotateCcw, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +18,72 @@ const Index = () => {
   const [processedContent, setProcessedContent] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState("original");
+
+  // Add useEffect to handle format changes
+  useEffect(() => {
+    if (transcription) {
+      updateTranscriptionFormat();
+    }
+  }, [outputFormat]);
+
+  const updateTranscriptionFormat = () => {
+    const baseText = "Welcome to our quarterly business review meeting. Today we'll be discussing the company's performance over the past three months, including revenue growth, market expansion strategies, and upcoming product launches. Our sales team has exceeded targets by 15%, particularly in the European market where we've seen a 23% increase in customer acquisition. The marketing department has successfully launched three major campaigns, resulting in improved brand recognition and customer engagement. Moving forward, we plan to invest heavily in research and development, with a focus on artificial intelligence and machine learning technologies. We anticipate launching two new products in the next quarter, pending final quality assurance testing. The financial outlook remains positive, with projected growth of 18% for the upcoming fiscal year.";
+    
+    if (outputFormat === 'json') {
+      setTranscription(JSON.stringify({
+        text: baseText,
+        timestamp: new Date().toISOString(),
+        format: "json",
+        confidence: 0.95,
+        duration: "4:32",
+        language: "en"
+      }, null, 2));
+    } else if (outputFormat === 'xml') {
+      setTranscription(`<?xml version="1.0" encoding="UTF-8"?>
+<transcription>
+  <text>${baseText}</text>
+  <timestamp>${new Date().toISOString()}</timestamp>
+  <format>xml</format>
+  <confidence>0.95</confidence>
+  <duration>4:32</duration>
+  <language>en</language>
+</transcription>`);
+    } else {
+      setTranscription(baseText);
+    }
+
+    // Also update processed content if it exists
+    if (processedContent) {
+      updateProcessedContentFormat();
+    }
+  };
+
+  const updateProcessedContentFormat = () => {
+    const baseProcessedText = processedContent.includes('Summary:') ? 
+      "Summary: This quarterly business review highlights strong performance with 15% sales growth, 23% European market expansion, successful marketing campaigns, and positive 18% projected growth for next fiscal year." :
+      processedContent.includes('Paraphrased:') ?
+      "Paraphrased: During this quarterly business assessment, we reviewed our company's achievements over the previous three months, focusing on revenue increases, market development tactics, and forthcoming product releases." :
+      "New Content: Building on our quarterly achievements, this comprehensive business analysis reveals exceptional performance metrics and strategic positioning for future growth initiatives.";
+
+    if (outputFormat === 'json') {
+      setProcessedContent(JSON.stringify({
+        type: processedContent.includes('Summary:') ? 'summary' : processedContent.includes('Paraphrased:') ? 'paraphrase' : 'generated',
+        content: baseProcessedText,
+        timestamp: new Date().toISOString(),
+        format: "json"
+      }, null, 2));
+    } else if (outputFormat === 'xml') {
+      setProcessedContent(`<?xml version="1.0" encoding="UTF-8"?>
+<processed>
+  <type>${processedContent.includes('Summary:') ? 'summary' : processedContent.includes('Paraphrased:') ? 'paraphrase' : 'generated'}</type>
+  <content>${baseProcessedText}</content>
+  <timestamp>${new Date().toISOString()}</timestamp>
+  <format>xml</format>
+</processed>`);
+    } else {
+      setProcessedContent(baseProcessedText);
+    }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -101,29 +166,9 @@ const Index = () => {
     } catch (error) {
       console.error('Transcription error:', error);
       toast.error("Transcription failed. Please try again.");
-      // For demo purposes, let's add a mock transcription based on format
+      // For demo purposes, call the format update function
       setTimeout(() => {
-        let demoText = "This is a demo transcription. Connect your WhisperAI API to see real results!";
-        
-        if (outputFormat === 'json') {
-          setTranscription(JSON.stringify({
-            text: demoText,
-            timestamp: new Date().toISOString(),
-            format: "json",
-            confidence: 0.95
-          }, null, 2));
-        } else if (outputFormat === 'xml') {
-          setTranscription(`<?xml version="1.0" encoding="UTF-8"?>
-<transcription>
-  <text>${demoText}</text>
-  <timestamp>${new Date().toISOString()}</timestamp>
-  <format>xml</format>
-  <confidence>0.95</confidence>
-</transcription>`);
-        } else {
-          setTranscription(demoText);
-        }
-        
+        updateTranscriptionFormat();
         toast.success("Demo transcription completed!");
       }, 2000);
     } finally {
@@ -145,17 +190,16 @@ const Index = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       let processedText = "";
-      const baseText = "This is a demo processed content. Connect your AI API to see real results!";
       
       switch (type) {
         case 'summarise':
-          processedText = `Summary: ${baseText} This content has been summarized to highlight the key points.`;
+          processedText = "Summary: This quarterly business review highlights strong performance with 15% sales growth, 23% European market expansion, successful marketing campaigns, and positive 18% projected growth for next fiscal year.";
           break;
         case 'paraphrase':
-          processedText = `Paraphrased: ${baseText} The same ideas expressed in different words.`;
+          processedText = "Paraphrased: During this quarterly business assessment, we reviewed our company's achievements over the previous three months, focusing on revenue increases, market development tactics, and forthcoming product releases.";
           break;
         case 'generate':
-          processedText = `New Content: ${baseText} Fresh content inspired by the original transcription.`;
+          processedText = "New Content: Building on our quarterly achievements, this comprehensive business analysis reveals exceptional performance metrics and strategic positioning for future growth initiatives.";
           break;
       }
 
