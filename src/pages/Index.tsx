@@ -1,9 +1,10 @@
-
 import { useState } from "react";
 import { Upload, FileAudio, Loader2, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -11,6 +12,7 @@ const Index = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [transcription, setTranscription] = useState("");
   const [dragActive, setDragActive] = useState(false);
+  const [outputFormat, setOutputFormat] = useState("text");
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -62,6 +64,7 @@ const Index = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('format', outputFormat);
       
       // Replace this URL with your actual API endpoint
       const response = await fetch('/api/transcribe', {
@@ -70,8 +73,19 @@ const Index = () => {
       });
       
       if (response.ok) {
-        const result = await response.json();
-        setTranscription(result.text);
+        const contentType = response.headers.get('content-type');
+        
+        if (outputFormat === 'json' || (contentType && contentType.includes('application/json'))) {
+          const result = await response.json();
+          setTranscription(JSON.stringify(result, null, 2));
+        } else if (outputFormat === 'xml' || (contentType && contentType.includes('application/xml'))) {
+          const xmlResult = await response.text();
+          setTranscription(xmlResult);
+        } else {
+          const result = await response.json();
+          setTranscription(result.text || result);
+        }
+        
         toast.success("Transcription completed!");
       } else {
         throw new Error('Transcription failed');
@@ -79,9 +93,29 @@ const Index = () => {
     } catch (error) {
       console.error('Transcription error:', error);
       toast.error("Transcription failed. Please try again.");
-      // For demo purposes, let's add a mock transcription
+      // For demo purposes, let's add a mock transcription based on format
       setTimeout(() => {
-        setTranscription("This is a demo transcription. Connect your WhisperAI API to see real results!");
+        let demoText = "This is a demo transcription. Connect your WhisperAI API to see real results!";
+        
+        if (outputFormat === 'json') {
+          setTranscription(JSON.stringify({
+            text: demoText,
+            timestamp: new Date().toISOString(),
+            format: "json",
+            confidence: 0.95
+          }, null, 2));
+        } else if (outputFormat === 'xml') {
+          setTranscription(`<?xml version="1.0" encoding="UTF-8"?>
+<transcription>
+  <text>${demoText}</text>
+  <timestamp>${new Date().toISOString()}</timestamp>
+  <format>xml</format>
+  <confidence>0.95</confidence>
+</transcription>`);
+        } else {
+          setTranscription(demoText);
+        }
+        
         toast.success("Demo transcription completed!");
       }, 2000);
     } finally {
@@ -176,6 +210,31 @@ const Index = () => {
                   )}
                 </div>
 
+                {/* Output Format Selection */}
+                <div className="mt-4 mb-4">
+                  <Label className="text-sm font-medium text-stone-700 mb-3 block">
+                    Output Format
+                  </Label>
+                  <RadioGroup 
+                    value={outputFormat} 
+                    onValueChange={setOutputFormat}
+                    className="flex gap-6"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="text" id="text" />
+                      <Label htmlFor="text" className="text-sm text-stone-600">Text</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="json" id="json" />
+                      <Label htmlFor="json" className="text-sm text-stone-600">JSON</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="xml" id="xml" />
+                      <Label htmlFor="xml" className="text-sm text-stone-600">XML</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
                 <Button 
                   onClick={handleTranscribe}
                   disabled={!file || isTranscribing}
@@ -200,9 +259,14 @@ const Index = () => {
                 <CardTitle className="flex items-center gap-2 text-stone-800">
                   <FileAudio className="h-5 w-5" />
                   Transcription Result
+                  {outputFormat !== 'text' && (
+                    <span className="text-xs bg-stone-100 text-stone-600 px-2 py-1 rounded-md ml-2">
+                      {outputFormat.toUpperCase()}
+                    </span>
+                  )}
                 </CardTitle>
                 <CardDescription className="text-stone-600">
-                  Your audio transcription will appear here
+                  Your audio transcription will appear here in {outputFormat} format
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -210,8 +274,8 @@ const Index = () => {
                   <Textarea
                     value={transcription}
                     onChange={(e) => setTranscription(e.target.value)}
-                    placeholder="Transcription will appear here after processing..."
-                    className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400"
+                    placeholder={`Transcription will appear here in ${outputFormat} format after processing...`}
+                    className="min-h-[200px] resize-none bg-white/60 border-stone-200 text-stone-800 placeholder:text-stone-400 font-mono text-sm"
                     readOnly={isTranscribing}
                   />
                   
