@@ -187,7 +187,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="h-screen overflow-hidden relative">
       {/* Enhanced Background Design */}
       <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-100 to-emerald-50"></div>
       
@@ -195,127 +195,71 @@ const Index = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-amber-200/20 to-stone-300/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-tr from-emerald-200/15 to-stone-300/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-stone-200/10 to-amber-100/15 rounded-full blur-2xl animate-pulse delay-500"></div>
       </div>
 
-      {/* Floating Geometric Shapes */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-emerald-300/30 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 2}s`,
-              animationDuration: `${8 + Math.random() * 4}s`
-            }}
-          ></div>
-        ))}
-      </div>
+      {/* Content Container */}
+      <div className="relative z-10 h-full flex flex-col p-4">
+        {/* Compact Header */}
+        <div className="text-center mb-4">
+          <h1 className="text-3xl font-bold text-stone-800 mb-2 bg-gradient-to-r from-stone-700 via-emerald-600 to-stone-700 bg-clip-text text-transparent">
+            WhisperAI Studio
+          </h1>
+          <p className="text-sm text-stone-600">
+            Transform audio into intelligent content with AI
+          </p>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 p-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-stone-800 mb-4 bg-gradient-to-r from-stone-700 via-emerald-600 to-stone-700 bg-clip-text text-transparent">
-              WhisperAI Studio
-            </h1>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-              Transform your audio into intelligent content with AI-powered transcription and processing
-            </p>
-          </div>
-
-          {/* Processing Pipeline */}
+        {/* Processing Pipeline - Compact */}
+        <div className="mb-4">
           <ProcessingPipeline 
             currentStep={currentStep}
             isTranscribing={isTranscribing}
             isProcessing={isProcessing}
           />
+        </div>
 
-          {/* Main Content Area */}
-          <div className="space-y-12">
-            {/* Upload Zone */}
-            <HeroUploadZone
-              file={file}
-              setFile={setFile}
-              onTranscribe={handleTranscribe}
-              isTranscribing={isTranscribing}
-            />
-
-            {/* Processing Hub */}
-            <InteractiveProcessingHub
-              onProcess={handleContentProcessing}
-              isProcessing={isProcessing}
-              hasContent={!!transcription}
-            />
-
-            {/* Content Canvas */}
-            {transcription && (
-              <SmartContentCanvas
-                transcription={transcription}
-                processedContent={processedContent}
-                outputFormat={outputFormat}
-                setOutputFormat={setOutputFormat}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                onClear={clearContent}
+        {/* Main Layout - Two Columns */}
+        <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
+          {/* Left Column - Upload & Processing */}
+          <div className="col-span-5 flex flex-col space-y-4">
+            {/* Compact Upload Zone */}
+            <div className="flex-shrink-0">
+              <HeroUploadZone
+                file={file}
+                setFile={setFile}
+                onTranscribe={handleTranscribe}
+                isTranscribing={isTranscribing}
               />
-            )}
+            </div>
+
+            {/* Processing Hub - Always Visible */}
+            <div className="flex-shrink-0">
+              <InteractiveProcessingHub
+                onProcess={handleContentProcessing}
+                isProcessing={isProcessing}
+                hasContent={!!transcription}
+              />
+            </div>
           </div>
 
-          {/* Enhanced Features Section */}
-          <div className="mt-20 grid gap-8 md:grid-cols-3">
-            {[
-              {
-                title: "AI-Powered Accuracy",
-                description: "Advanced machine learning models ensure precise transcription with 95%+ accuracy",
-                icon: "🤖",
-                gradient: "from-blue-100 to-blue-200"
-              },
-              {
-                title: "Smart Processing",
-                description: "Intelligent content transformation with summarization, paraphrasing, and generation",
-                icon: "⚡",
-                gradient: "from-purple-100 to-purple-200"
-              },
-              {
-                title: "Multiple Formats",
-                description: "Export in Text, JSON, or XML formats with real-time preview and syntax highlighting",
-                icon: "📄",
-                gradient: "from-emerald-100 to-emerald-200"
-              }
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className={`relative p-8 rounded-2xl bg-gradient-to-br ${feature.gradient} backdrop-blur-sm border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group`}
-              >
-                <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="font-bold text-stone-800 mb-3 text-lg">{feature.title}</h3>
-                <p className="text-stone-600 leading-relaxed">{feature.description}</p>
-                
-                {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          {/* Right Column - Content Canvas */}
+          <div className="col-span-7 min-h-0">
+            {transcription && (
+              <div className="h-full">
+                <SmartContentCanvas
+                  transcription={transcription}
+                  processedContent={processedContent}
+                  outputFormat={outputFormat}
+                  setOutputFormat={setOutputFormat}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  onClear={clearContent}
+                />
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
-
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-20px) rotate(120deg); }
-          66% { transform: translateY(-10px) rotate(240deg); }
-        }
-        .animate-float {
-          animation: float 8s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };

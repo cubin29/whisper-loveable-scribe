@@ -54,129 +54,115 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4">
-      {/* Animated Background Circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-emerald-200/20 to-stone-300/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-tr from-amber-200/15 to-emerald-300/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
-      {/* Main Upload Circle */}
-      <div className="relative z-10">
-        <div
-          className={`relative w-80 h-80 rounded-full border-4 border-dashed transition-all duration-500 backdrop-blur-sm ${
-            dragActive
-              ? "border-emerald-400 bg-emerald-50/30 scale-105"
-              : file
-              ? "border-emerald-500 bg-emerald-50/20 scale-100"
-              : "border-stone-300 bg-white/10 hover:border-stone-400 hover:scale-105"
-          } ${isTranscribing ? "animate-pulse" : ""}`}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            accept="audio/*"
-            onChange={handleFileInput}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
-          />
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            {file ? (
-              <div className="text-center space-y-4">
-                <div className="relative">
-                  <CheckCircle className="h-16 w-16 text-emerald-600 mx-auto animate-bounce" />
-                  {isTranscribing && (
-                    <div className="absolute inset-0 border-4 border-emerald-200 rounded-full animate-spin border-t-emerald-600"></div>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <p className="font-semibold text-emerald-700 text-lg">{file.name}</p>
-                  <p className="text-emerald-600 text-sm">
-                    {(file.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                  
-                  {/* Audio Waveform Visualization Placeholder */}
-                  <div className="flex justify-center space-x-1 mt-4">
-                    {[...Array(12)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-1 bg-emerald-500 rounded-full transition-all duration-300 ${
-                          isPlaying ? 'animate-pulse' : ''
-                        }`}
-                        style={{ 
-                          height: `${Math.random() * 20 + 10}px`,
-                          animationDelay: `${i * 100}ms`
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                  
-                  {/* Play/Pause Button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className="mt-2 bg-white/50 hover:bg-white/70"
-                  >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </Button>
-                </div>
+    <div className="relative">
+      {/* Compact Upload Circle */}
+      <div
+        className={`relative w-48 h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 backdrop-blur-sm ${
+          dragActive
+            ? "border-emerald-400 bg-emerald-50/30 scale-105"
+            : file
+            ? "border-emerald-500 bg-emerald-50/20"
+            : "border-stone-300 bg-white/10 hover:border-stone-400 hover:scale-105"
+        } ${isTranscribing ? "animate-pulse" : ""}`}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={handleFileInput}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
+        />
+        
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {file ? (
+            <div className="text-center space-y-2">
+              <div className="relative">
+                <CheckCircle className="h-12 w-12 text-emerald-600 mx-auto animate-bounce" />
+                {isTranscribing && (
+                  <div className="absolute inset-0 border-4 border-emerald-200 rounded-full animate-spin border-t-emerald-600"></div>
+                )}
               </div>
-            ) : (
-              <div className="text-center space-y-4">
-                <div className={`transition-transform duration-300 ${dragActive ? 'scale-110' : ''}`}>
-                  <FileAudio className="h-20 w-20 text-stone-500 mx-auto" />
+              <div className="space-y-1">
+                <p className="font-semibold text-emerald-700 text-sm truncate max-w-32">{file.name}</p>
+                <p className="text-emerald-600 text-xs">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+                
+                {/* Mini Audio Visualization */}
+                <div className="flex justify-center space-x-px mt-2">
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-0.5 bg-emerald-500 rounded-full transition-all duration-300 ${
+                        isPlaying ? 'animate-pulse' : ''
+                      }`}
+                      style={{ 
+                        height: `${Math.random() * 12 + 6}px`,
+                        animationDelay: `${i * 100}ms`
+                      }}
+                    ></div>
+                  ))}
                 </div>
-                <div className="space-y-2">
-                  <p className="text-xl font-medium text-stone-700">
-                    Drop your audio here
-                  </p>
-                  <p className="text-stone-500">
-                    or click to browse files
-                  </p>
-                  <p className="text-xs text-stone-400">
-                    MP3, WAV, M4A supported
-                  </p>
-                </div>
+                
+                {/* Compact Play Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsPlaying(!isPlaying);
+                  }}
+                  className="mt-1 h-6 w-6 p-0 bg-white/50 hover:bg-white/70"
+                >
+                  {isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+                </Button>
               </div>
-            )}
-          </div>
-
-          {/* Ripple Effect on Hover */}
-          {!file && (
-            <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            </div>
+          ) : (
+            <div className="text-center space-y-2">
+              <FileAudio className="h-12 w-12 text-stone-500 mx-auto" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-stone-700">
+                  Drop audio here
+                </p>
+                <p className="text-xs text-stone-500">
+                  or click to browse
+                </p>
+                <p className="text-xs text-stone-400">
+                  MP3, WAV, M4A
+                </p>
+              </div>
             </div>
           )}
         </div>
-
-        {/* Floating Action Button */}
-        {file && (
-          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
-            <Button
-              onClick={onTranscribe}
-              disabled={isTranscribing}
-              className="relative px-8 py-6 bg-gradient-to-r from-emerald-600 to-stone-700 hover:from-emerald-700 hover:to-stone-800 text-white rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300"
-              size="lg"
-            >
-              {isTranscribing ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                  Transcribing...
-                </>
-              ) : (
-                <>
-                  <Upload className="h-5 w-5 mr-3" />
-                  Start Magic ✨
-                </>
-              )}
-            </Button>
-          </div>
-        )}
       </div>
+
+      {/* Compact Action Button */}
+      {file && (
+        <div className="flex justify-center mt-3">
+          <Button
+            onClick={onTranscribe}
+            disabled={isTranscribing}
+            className="px-6 py-2 bg-gradient-to-r from-emerald-600 to-stone-700 hover:from-emerald-700 hover:to-stone-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300"
+            size="sm"
+          >
+            {isTranscribing ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Transcribing...
+              </>
+            ) : (
+              <>
+                <Upload className="h-4 w-4 mr-2" />
+                Start Magic ✨
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

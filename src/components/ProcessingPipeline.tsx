@@ -29,10 +29,10 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto mb-8">
+    <div className="w-full max-w-xl mx-auto">
       <div className="relative flex justify-between items-center">
         {/* Connection Lines */}
-        <div className="absolute top-6 left-0 right-0 h-0.5 bg-stone-200 z-0">
+        <div className="absolute top-4 left-0 right-0 h-0.5 bg-stone-200 z-0">
           <div 
             className="h-full bg-gradient-to-r from-emerald-500 to-stone-600 transition-all duration-1000 ease-out"
             style={{ 
@@ -50,22 +50,22 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
           return (
             <div key={step.id} className="relative z-10 flex flex-col items-center">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
                   status === 'completed'
                     ? 'bg-emerald-500 text-white scale-110'
                     : status === 'current' || status === 'active'
-                    ? 'bg-white border-4 border-emerald-500 text-emerald-600 scale-110'
+                    ? 'bg-white border-3 border-emerald-500 text-emerald-600 scale-110'
                     : 'bg-white border-2 border-stone-200 text-stone-400'
                 } ${status === 'active' ? 'animate-pulse' : ''}`}
               >
                 {status === 'completed' ? (
-                  <CheckCircle2 className="h-6 w-6" />
+                  <CheckCircle2 className="h-4 w-4" />
                 ) : (
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-3 w-3" />
                 )}
               </div>
               <span
-                className={`mt-2 text-sm font-medium transition-colors duration-300 ${
+                className={`mt-1 text-xs font-medium transition-colors duration-300 ${
                   status === 'completed' || status === 'current' || status === 'active'
                     ? 'text-emerald-600'
                     : 'text-stone-400'
@@ -73,24 +73,6 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
               >
                 {step.label}
               </span>
-              
-              {/* Floating particles for active steps */}
-              {status === 'active' && (
-                <div className="absolute -top-2 -left-2 w-16 h-16 pointer-events-none">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-1 h-1 bg-emerald-400 rounded-full animate-ping"
-                      style={{
-                        left: `${Math.random() * 60}px`,
-                        top: `${Math.random() * 60}px`,
-                        animationDelay: `${i * 200}ms`,
-                        animationDuration: '2s'
-                      }}
-                    ></div>
-                  ))}
-                </div>
-              )}
             </div>
           );
         })}
