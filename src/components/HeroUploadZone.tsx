@@ -59,10 +59,10 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
       <div
         className={`relative w-48 h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 backdrop-blur-sm ${
           dragActive
-            ? "border-emerald-400 bg-emerald-50/30 scale-105"
+            ? "border-emerald-400 bg-emerald-50/50 scale-105"
             : file
-            ? "border-emerald-500 bg-emerald-50/20"
-            : "border-stone-300 bg-white/10 hover:border-stone-400 hover:scale-105"
+            ? "border-emerald-500 bg-emerald-50/30"
+            : "border-stone-400 bg-white/60 hover:border-emerald-400 hover:scale-105"
         } ${isTranscribing ? "animate-pulse" : ""}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -86,8 +86,8 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                 )}
               </div>
               <div className="space-y-1">
-                <p className="font-semibold text-emerald-700 text-sm truncate max-w-32">{file.name}</p>
-                <p className="text-emerald-600 text-xs">
+                <p className="font-semibold text-stone-800 text-sm truncate max-w-32">{file.name}</p>
+                <p className="text-stone-700 text-xs">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
                 
@@ -115,7 +115,7 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                     e.stopPropagation();
                     setIsPlaying(!isPlaying);
                   }}
-                  className="mt-1 h-6 w-6 p-0 bg-white/50 hover:bg-white/70"
+                  className="mt-1 h-6 w-6 p-0 bg-white/80 hover:bg-white border-stone-300 text-stone-700"
                 >
                   {isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                 </Button>
@@ -123,15 +123,15 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
             </div>
           ) : (
             <div className="text-center space-y-2">
-              <FileAudio className="h-12 w-12 text-stone-500 mx-auto" />
+              <FileAudio className="h-12 w-12 text-stone-600 mx-auto" />
               <div className="space-y-1">
-                <p className="text-sm font-medium text-stone-700">
+                <p className="text-sm font-medium text-stone-800">
                   Drop audio here
                 </p>
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-stone-600">
                   or click to browse
                 </p>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-stone-500">
                   MP3, WAV, M4A
                 </p>
               </div>

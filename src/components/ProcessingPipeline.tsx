@@ -32,7 +32,7 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
     <div className="w-full max-w-xl mx-auto">
       <div className="relative flex justify-between items-center">
         {/* Connection Lines */}
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-stone-200 z-0">
+        <div className="absolute top-4 left-0 right-0 h-0.5 bg-stone-300 z-0">
           <div 
             className="h-full bg-gradient-to-r from-emerald-500 to-stone-600 transition-all duration-1000 ease-out"
             style={{ 
@@ -55,7 +55,7 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
                     ? 'bg-emerald-500 text-white scale-110'
                     : status === 'current' || status === 'active'
                     ? 'bg-white border-3 border-emerald-500 text-emerald-600 scale-110'
-                    : 'bg-white border-2 border-stone-200 text-stone-400'
+                    : 'bg-white border-2 border-stone-400 text-stone-500'
                 } ${status === 'active' ? 'animate-pulse' : ''}`}
               >
                 {status === 'completed' ? (
@@ -67,8 +67,8 @@ export const ProcessingPipeline = ({ currentStep, isTranscribing, isProcessing }
               <span
                 className={`mt-1 text-xs font-medium transition-colors duration-300 ${
                   status === 'completed' || status === 'current' || status === 'active'
-                    ? 'text-emerald-600'
-                    : 'text-stone-400'
+                    ? 'text-emerald-700'
+                    : 'text-stone-600'
                 }`}
               >
                 {step.label}

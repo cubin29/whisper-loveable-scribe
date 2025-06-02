@@ -40,10 +40,10 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
 
   if (!hasContent) {
     return (
-      <div className="text-center p-6 bg-white/30 backdrop-blur-sm rounded-2xl border border-white/50">
-        <Wand2 className="h-8 w-8 text-stone-400 mx-auto mb-2" />
-        <p className="text-stone-500 text-sm">AI Processing Hub</p>
-        <p className="text-stone-400 text-xs">Upload and transcribe first</p>
+      <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-stone-300">
+        <Wand2 className="h-8 w-8 text-stone-600 mx-auto mb-2" />
+        <p className="text-stone-800 text-sm font-medium">AI Processing Hub</p>
+        <p className="text-stone-600 text-xs">Upload and transcribe first</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
     <div className="space-y-3">
       {/* Hub Header */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-stone-600 text-white rounded-full text-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-stone-700 text-white rounded-full text-sm shadow-lg">
           <Wand2 className="h-4 w-4" />
           <span className="font-medium">AI Processing Hub</span>
           <Sparkles className="h-4 w-4" />
@@ -72,7 +72,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
               onMouseEnter={() => setHoveredOption(option.id)}
               onMouseLeave={() => setHoveredOption(null)}
               disabled={isProcessing}
-              className={`w-full p-3 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
+              className={`relative w-full p-3 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
                 isHovered
                   ? 'scale-105 shadow-lg border-white/30'
                   : 'hover:scale-102 shadow-sm border-white/20'
