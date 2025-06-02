@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +20,7 @@ export default {
 		},
 		extend: {
 			colors: {
+				// Original shadcn colors
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -61,6 +63,37 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// New AI Project inspired colors
+				'ai-dark': '#1a1a1a',
+				'ai-green': {
+					50: '#f0f9f3',
+					100: '#dcf2e4',
+					200: '#bce5ca',
+					300: '#8bd0a4',
+					400: '#52b477',
+					500: '#2f9e57',
+					600: '#1f7d43',
+					700: '#1a6537',
+					800: '#17512e',
+					900: '#154327',
+				},
+				'ai-red': {
+					500: '#b91c1c',
+					600: '#991b1b',
+					700: '#7f1d1d',
+				},
+				'ai-neutral': {
+					50: '#fafafa',
+					100: '#f5f5f5',
+					200: '#e5e5e5',
+					300: '#d4d4d4',
+					400: '#a3a3a3',
+					500: '#737373',
+					600: '#525252',
+					700: '#404040',
+					800: '#262626',
+					900: '#171717',
 				}
 			},
 			borderRadius: {

@@ -17,7 +17,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Summarise',
       description: 'Extract key points',
       icon: FileText,
-      color: 'from-blue-600 to-blue-700',
+      color: 'from-ai-green-500 to-ai-green-600',
       particles: '💫'
     },
     {
@@ -25,7 +25,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Paraphrase',
       description: 'Rewrite content',
       icon: RotateCcw,
-      color: 'from-purple-600 to-purple-700',
+      color: 'from-ai-green-600 to-ai-green-700',
       particles: '🔄'
     },
     {
@@ -33,33 +33,33 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Generate',
       description: 'Create new content',
       icon: Lightbulb,
-      color: 'from-amber-600 to-orange-600',
+      color: 'from-ai-green-700 to-ai-green-800',
       particles: '✨'
     }
   ];
 
   if (!hasContent) {
     return (
-      <div className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-stone-400 shadow-sm">
-        <Wand2 className="h-8 w-8 text-stone-700 mx-auto mb-2" />
-        <p className="text-stone-900 text-sm font-semibold">AI Processing Hub</p>
-        <p className="text-stone-700 text-xs">Upload and transcribe first</p>
+      <div className="text-center p-4 sm:p-6 bg-white/90 backdrop-blur-sm rounded-2xl border border-ai-neutral-300 shadow-sm">
+        <Wand2 className="h-6 w-6 sm:h-8 sm:w-8 text-ai-neutral-600 mx-auto mb-2" />
+        <p className="text-ai-dark text-sm font-semibold">AI Processing Hub</p>
+        <p className="text-ai-neutral-600 text-xs">Upload and transcribe first</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {/* Hub Header */}
+      {/* Hub Header - Mobile Responsive */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-stone-700 text-white rounded-full text-sm shadow-lg">
-          <Wand2 className="h-4 w-4" />
+        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-ai-green-600 to-ai-green-700 text-white rounded-full text-xs sm:text-sm shadow-lg">
+          <Wand2 className="h-3 w-3 sm:h-4 sm:w-4" />
           <span className="font-medium">AI Processing Hub</span>
-          <Sparkles className="h-4 w-4" />
+          <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
         </div>
       </div>
 
-      {/* Processing Options - Compact Grid */}
+      {/* Processing Options - Mobile Responsive Grid */}
       <div className="grid grid-cols-1 gap-2">
         {processingOptions.map((option, index) => {
           const Icon = option.icon;
@@ -78,13 +78,13 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
                   : 'hover:scale-102 shadow-sm border-white/20'
               } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               style={{
-                background: `linear-gradient(135deg, ${option.color.split(' ')[1]}, ${option.color.split(' ')[3]})`
+                background: `linear-gradient(135deg, ${option.color.replace('from-', '#').replace('to-', '#').replace('ai-green-500', '#2f9e57').replace('ai-green-600', '#1f7d43').replace('ai-green-700', '#1a6537').replace('ai-green-800', '#17512e')})`
               }}
             >
               <div className="text-white text-left">
                 <div className="flex items-center gap-2">
                   <div className={`p-1.5 rounded-lg bg-white/20 transition-transform duration-300 ${isHovered ? 'rotate-12' : ''}`}>
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">{option.label}</h3>

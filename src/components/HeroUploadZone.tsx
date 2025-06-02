@@ -55,15 +55,15 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
 
   return (
     <div className="relative">
-      {/* Upload Circle with better contrast */}
+      {/* Upload Circle with AI-inspired design - Mobile Responsive */}
       <div
-        className={`relative w-48 h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 ${
+        className={`relative w-36 h-36 sm:w-48 sm:h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 ${
           dragActive
-            ? "border-emerald-600 bg-white/80 scale-105"
+            ? "border-ai-green-600 bg-white/90 scale-105 shadow-lg"
             : file
-            ? "border-emerald-600 bg-white/90"
-            : "border-stone-500 bg-white/70 hover:border-emerald-600 hover:scale-105"
-        } ${isTranscribing ? "animate-pulse" : ""}`}
+            ? "border-ai-green-600 bg-white/95 shadow-md"
+            : "border-ai-neutral-400 bg-white/80 hover:border-ai-green-500 hover:scale-105 hover:shadow-md"
+        } ${isTranscribing ? "animate-pulse shadow-lg" : ""}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -76,31 +76,31 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
         />
         
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
           {file ? (
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-1 sm:space-y-2">
               <div className="relative">
-                <CheckCircle className="h-12 w-12 text-emerald-600 mx-auto animate-bounce" />
+                <CheckCircle className="h-8 w-8 sm:h-12 sm:w-12 text-ai-green-600 mx-auto animate-bounce" />
                 {isTranscribing && (
-                  <div className="absolute inset-0 border-4 border-emerald-200 rounded-full animate-spin border-t-emerald-600"></div>
+                  <div className="absolute inset-0 border-4 border-ai-green-200 rounded-full animate-spin border-t-ai-green-600"></div>
                 )}
               </div>
               <div className="space-y-1">
-                <p className="font-semibold text-stone-900 text-sm truncate max-w-32">{file.name}</p>
-                <p className="text-stone-700 text-xs">
+                <p className="font-semibold text-ai-dark text-xs sm:text-sm truncate max-w-24 sm:max-w-32">{file.name}</p>
+                <p className="text-ai-neutral-600 text-xs">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
                 
                 {/* Mini Audio Visualization */}
-                <div className="flex justify-center space-x-px mt-2">
-                  {[...Array(8)].map((_, i) => (
+                <div className="flex justify-center space-x-px mt-1 sm:mt-2">
+                  {[...Array(6)].map((_, i) => (
                     <div
                       key={i}
-                      className={`w-0.5 bg-emerald-600 rounded-full transition-all duration-300 ${
+                      className={`w-0.5 bg-ai-green-600 rounded-full transition-all duration-300 ${
                         isPlaying ? 'animate-pulse' : ''
                       }`}
                       style={{ 
-                        height: `${Math.random() * 12 + 6}px`,
+                        height: `${Math.random() * 8 + 4}px`,
                         animationDelay: `${i * 100}ms`
                       }}
                     ></div>
@@ -115,23 +115,23 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                     e.stopPropagation();
                     setIsPlaying(!isPlaying);
                   }}
-                  className="mt-1 h-6 w-6 p-0 bg-white hover:bg-stone-50 border-stone-400 text-stone-800"
+                  className="mt-1 h-5 w-5 sm:h-6 sm:w-6 p-0 bg-white hover:bg-ai-green-50 border-ai-neutral-400 text-ai-dark hover:border-ai-green-500"
                 >
-                  {isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+                  {isPlaying ? <Pause className="h-2 w-2 sm:h-3 sm:w-3" /> : <Play className="h-2 w-2 sm:h-3 sm:w-3" />}
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="text-center space-y-2">
-              <FileAudio className="h-12 w-12 text-stone-700 mx-auto" />
+            <div className="text-center space-y-1 sm:space-y-2">
+              <FileAudio className="h-8 w-8 sm:h-12 sm:w-12 text-ai-neutral-600 mx-auto" />
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-stone-900">
+                <p className="text-xs sm:text-sm font-semibold text-ai-dark">
                   Drop audio here
                 </p>
-                <p className="text-xs text-stone-700">
+                <p className="text-xs text-ai-neutral-600">
                   or click to browse
                 </p>
-                <p className="text-xs text-stone-600">
+                <p className="text-xs text-ai-neutral-500">
                   MP3, WAV, M4A
                 </p>
               </div>
@@ -140,23 +140,23 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
         </div>
       </div>
 
-      {/* Action Button */}
+      {/* Action Button - Mobile Responsive */}
       {file && (
         <div className="flex justify-center mt-3">
           <Button
             onClick={onTranscribe}
             disabled={isTranscribing}
-            className="px-6 py-2 bg-gradient-to-r from-emerald-600 to-stone-700 hover:from-emerald-700 hover:to-stone-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="px-4 sm:px-6 py-2 bg-gradient-to-r from-ai-green-600 to-ai-green-700 hover:from-ai-green-700 hover:to-ai-green-800 text-white rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 text-sm sm:text-base"
             size="sm"
           >
             {isTranscribing ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white mr-2"></div>
                 Transcribing...
               </>
             ) : (
               <>
-                <Upload className="h-4 w-4 mr-2" />
+                <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Start Magic ✨
               </>
             )}

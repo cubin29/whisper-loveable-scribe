@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { HeroUploadZone } from "@/components/HeroUploadZone";
@@ -187,30 +186,27 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-ai-neutral-50 via-ai-green-50 to-ai-neutral-100">
       {/* Enhanced Background Design */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-stone-100 to-emerald-50"></div>
-      
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-amber-200/20 to-stone-300/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-tr from-emerald-200/15 to-stone-300/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-ai-green-200/20 to-ai-neutral-300/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-tr from-ai-green-100/15 to-ai-neutral-300/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col p-4">
+      {/* Content Container - Mobile Responsive */}
+      <div className="relative z-10 min-h-screen flex flex-col p-4 lg:p-6">
         {/* Compact Header */}
-        <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold text-stone-800 mb-2 bg-gradient-to-r from-stone-700 via-emerald-600 to-stone-700 bg-clip-text text-transparent">
+        <div className="text-center mb-4 lg:mb-6">
+          <h1 className="text-2xl lg:text-3xl font-bold text-ai-dark mb-2 bg-gradient-to-r from-ai-dark via-ai-green-600 to-ai-dark bg-clip-text text-transparent">
             WhisperAI Studio
           </h1>
-          <p className="text-sm text-stone-600">
+          <p className="text-sm lg:text-base text-ai-neutral-600">
             Transform audio into intelligent content with AI
           </p>
         </div>
 
-        {/* Processing Pipeline - Compact */}
-        <div className="mb-4">
+        {/* Processing Pipeline - Compact and Mobile Responsive */}
+        <div className="mb-4 lg:mb-6">
           <ProcessingPipeline 
             currentStep={currentStep}
             isTranscribing={isTranscribing}
@@ -218,10 +214,10 @@ const Index = () => {
           />
         </div>
 
-        {/* Main Layout - Two Columns */}
-        <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
-          {/* Left Column - Upload & Processing */}
-          <div className="col-span-5 flex flex-col space-y-4">
+        {/* Main Layout - Responsive Grid */}
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 min-h-0">
+          {/* Left Column - Upload & Processing - Full width on mobile */}
+          <div className="lg:col-span-5 flex flex-col space-y-4 order-1 lg:order-1">
             {/* Compact Upload Zone */}
             <div className="flex-shrink-0">
               <HeroUploadZone
@@ -242,10 +238,10 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right Column - Content Canvas */}
-          <div className="col-span-7 min-h-0">
+          {/* Right Column - Content Canvas - Full width on mobile, below other content */}
+          <div className="lg:col-span-7 min-h-0 order-2 lg:order-2">
             {transcription && (
-              <div className="h-full">
+              <div className="h-full min-h-[400px] lg:min-h-0">
                 <SmartContentCanvas
                   transcription={transcription}
                   processedContent={processedContent}
