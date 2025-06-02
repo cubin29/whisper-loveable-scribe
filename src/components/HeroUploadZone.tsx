@@ -55,14 +55,14 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
 
   return (
     <div className="relative">
-      {/* Compact Upload Circle */}
+      {/* Upload Circle with better contrast */}
       <div
-        className={`relative w-48 h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 backdrop-blur-sm ${
+        className={`relative w-48 h-48 mx-auto rounded-full border-4 border-dashed transition-all duration-500 ${
           dragActive
-            ? "border-emerald-400 bg-emerald-50/50 scale-105"
+            ? "border-emerald-600 bg-white/80 scale-105"
             : file
-            ? "border-emerald-500 bg-emerald-50/30"
-            : "border-stone-400 bg-white/60 hover:border-emerald-400 hover:scale-105"
+            ? "border-emerald-600 bg-white/90"
+            : "border-stone-500 bg-white/70 hover:border-emerald-600 hover:scale-105"
         } ${isTranscribing ? "animate-pulse" : ""}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -86,7 +86,7 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                 )}
               </div>
               <div className="space-y-1">
-                <p className="font-semibold text-stone-800 text-sm truncate max-w-32">{file.name}</p>
+                <p className="font-semibold text-stone-900 text-sm truncate max-w-32">{file.name}</p>
                 <p className="text-stone-700 text-xs">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </p>
@@ -96,7 +96,7 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                   {[...Array(8)].map((_, i) => (
                     <div
                       key={i}
-                      className={`w-0.5 bg-emerald-500 rounded-full transition-all duration-300 ${
+                      className={`w-0.5 bg-emerald-600 rounded-full transition-all duration-300 ${
                         isPlaying ? 'animate-pulse' : ''
                       }`}
                       style={{ 
@@ -115,7 +115,7 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
                     e.stopPropagation();
                     setIsPlaying(!isPlaying);
                   }}
-                  className="mt-1 h-6 w-6 p-0 bg-white/80 hover:bg-white border-stone-300 text-stone-700"
+                  className="mt-1 h-6 w-6 p-0 bg-white hover:bg-stone-50 border-stone-400 text-stone-800"
                 >
                   {isPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                 </Button>
@@ -123,15 +123,15 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
             </div>
           ) : (
             <div className="text-center space-y-2">
-              <FileAudio className="h-12 w-12 text-stone-600 mx-auto" />
+              <FileAudio className="h-12 w-12 text-stone-700 mx-auto" />
               <div className="space-y-1">
-                <p className="text-sm font-medium text-stone-800">
+                <p className="text-sm font-semibold text-stone-900">
                   Drop audio here
                 </p>
-                <p className="text-xs text-stone-600">
+                <p className="text-xs text-stone-700">
                   or click to browse
                 </p>
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-stone-600">
                   MP3, WAV, M4A
                 </p>
               </div>
@@ -140,7 +140,7 @@ export const HeroUploadZone = ({ file, setFile, onTranscribe, isTranscribing }: 
         </div>
       </div>
 
-      {/* Compact Action Button */}
+      {/* Action Button */}
       {file && (
         <div className="flex justify-center mt-3">
           <Button

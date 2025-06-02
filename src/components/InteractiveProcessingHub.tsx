@@ -17,7 +17,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Summarise',
       description: 'Extract key points',
       icon: FileText,
-      color: 'from-blue-500 to-blue-600',
+      color: 'from-blue-600 to-blue-700',
       particles: '💫'
     },
     {
@@ -25,7 +25,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Paraphrase',
       description: 'Rewrite content',
       icon: RotateCcw,
-      color: 'from-purple-500 to-purple-600',
+      color: 'from-purple-600 to-purple-700',
       particles: '🔄'
     },
     {
@@ -33,17 +33,17 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
       label: 'Generate',
       description: 'Create new content',
       icon: Lightbulb,
-      color: 'from-amber-500 to-orange-500',
+      color: 'from-amber-600 to-orange-600',
       particles: '✨'
     }
   ];
 
   if (!hasContent) {
     return (
-      <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-stone-300">
-        <Wand2 className="h-8 w-8 text-stone-600 mx-auto mb-2" />
-        <p className="text-stone-800 text-sm font-medium">AI Processing Hub</p>
-        <p className="text-stone-600 text-xs">Upload and transcribe first</p>
+      <div className="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-stone-400 shadow-sm">
+        <Wand2 className="h-8 w-8 text-stone-700 mx-auto mb-2" />
+        <p className="text-stone-900 text-sm font-semibold">AI Processing Hub</p>
+        <p className="text-stone-700 text-xs">Upload and transcribe first</p>
       </div>
     );
   }
@@ -78,9 +78,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
                   : 'hover:scale-102 shadow-sm border-white/20'
               } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               style={{
-                background: isHovered 
-                  ? `linear-gradient(135deg, ${option.color.split(' ')[1]}, ${option.color.split(' ')[3]})`
-                  : `linear-gradient(135deg, ${option.color.split(' ')[1]}, ${option.color.split(' ')[3]})`
+                background: `linear-gradient(135deg, ${option.color.split(' ')[1]}, ${option.color.split(' ')[3]})`
               }}
             >
               <div className="text-white text-left">
@@ -90,7 +88,7 @@ export const InteractiveProcessingHub = ({ onProcess, isProcessing, hasContent }
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">{option.label}</h3>
-                    <p className="text-white/80 text-xs">{option.description}</p>
+                    <p className="text-white/90 text-xs">{option.description}</p>
                   </div>
                   <span className="text-sm">{option.particles}</span>
                 </div>
